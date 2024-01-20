@@ -16,12 +16,14 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     passhash = db.Column(db.String(255), nullable=False)
 
+    created_at = db.Column(db.String(10), default=datetime.now().strftime("%B %Y"))
+
     songs = db.relationship("Song", backref="user", lazy=True)
     albums = db.relationship("Album", backref="user", lazy=True)
 
     @property
     def password(self):
-        raise AttributeError("password is not a readable attrivute")
+        raise AttributeError("password is not a readable attribute")
 
     @password.setter
     def password(self, password):

@@ -6,10 +6,12 @@
 }
 
 body {
-    background: lightpink;
+    background: rgb(255, 220, 226);
+    max-width: 800px;
     width: fit-content;
-    margin: auto;
-    font-size: 20px;
+    margin-top: 60px;
+    margin-inline: auto;
+
 }
 
 a {
@@ -18,19 +20,44 @@ a {
     border-bottom: 1px solid #111;
 }
 
-a:hover {
+a:hover,
+.hover-slant {
     font-style: italic;
 }
 
-button,
-input[type="submit"] {
+.btn-box {
+    
     background: #eee;
+}
+
+
+
+.btn-check-box {
+    padding: 5px 12px;
+    border: 1px solid #111;
+    border-radius: 0;
+    background: red;
+}
+
+.btn-box,
+input[type="submit"] {
+    color: black;
     padding: 5px 12px;
     border: 1px solid #111;
     border-radius: 0;
 }
 
-button:active,
+input[type="submit"] {
+    background: #198754;
+    color: white;
+}
+
+.btn-success {
+    padding: 5px 12px !important;
+}
+
+.btn-box-check:checked,
+button.btn-box:active,
 input[type="submit"]:active,
 a:active {
     color: #eee;
@@ -39,10 +66,8 @@ a:active {
 
 form {
     background-color: #fff5;
-    border: 1px solid black;
     padding: 15px 15px 30px 15px;
-    margin: 10px;
-    max-width: 400px;
+    max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -53,4 +78,37 @@ form input {
     margin: 5px 0;
     padding: 4px 8px;
     font-size: 22px;
+}
+
+.card-box {
+    display: flex;
+    width: min-content;
+    flex-direction: column;
+    padding: 5px;
+    background: white;
+    border: 1px solid #111;
+}
+
+.track-card {
+    display: flex;
+    max-width: 200px;
+    gap: 8px;
+    background: white;
+    border: 1px solid #111;
+    padding: 3px 6px 3px 3px;
+}
+
+.track-subtitle {
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+.track-card img {
+    height: 60px;
+}
+
+.track-title {
+    font-weight: 600;
+    font-size: larger;
+    padding-bottom: 2px;
 }

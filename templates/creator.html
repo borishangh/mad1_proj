@@ -1,0 +1,164 @@
+{% extends '/components/base.html' %}
+
+{% block title %}
+creator | STR3M
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">@{{user.username}} : creator profile</h1>
+<section class="my-4">
+    <div class="d-flex d-row gap-4">
+        <div class="card-box">
+            <img src="{{user.pfp_url}}" width="200px">
+            <span>STR3AM3R since {{user.created_at}}</span>
+            <span> played {{ user.songs | map(attribute='plays') | sum }} times</span>
+        </div>
+        <div>
+            <h3>Best Performing</h3>
+            {% if user.songs %}
+            <ol>
+                {% for song in user.songs | sort(attribute='plays', reverse=True) %}
+                <li><a href="" class="track-title">{{ song.song_name }}</a> // {{ song.plays }} plays</li>
+                {% endfor %}
+            </ol>
+            {% else %}
+            <p>No tracks available</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="my-4">
+    <h2>Your Tracks</h2>
+
+    <div class="d-flex flex-row flex-wrap gap-2 align-items-start">
+        <button type="button" class="btn-box" data-bs-toggle="modal" data-bs-target="#song-details">
+            Add Song
+        </button>
+
+        <div class="modal fade" id="song-details" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="song-details-title">Song Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <label for="songname">Song name :
+                                <input type="text" name="songname" id="songname" />
+                            </label>
+                            <label for="songfile">Add Song file :
+                                <input type="file" name="songfile" class="form-control" id="songfile" accept=".mp3" />
+                            </label>
+                            <label for="lyrics">Lyrics :
+                                <textarea name="lyrics" class="form-control" id="lyrics" rows="12"
+                                    placeholder="Paste your lyrics here."></textarea>
+                            </label>
+
+                            <hr>
+
+                            <button type="button" class="btn-box" data-bs-dismiss="modal">Close</button>
+
+                            <input type="submit" name="song" value="Save Changes" data-bs-dismiss="modal">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if user.songs == [] %}
+        <p>You have no uploaded songs.</p>
+        {% endif %}
+
+        {% for song in user.songs %}
+
+        <div class="track-card">
+
+            {% if song.album_id == None %}
+            <img src="/static/default_album.jpg">
+            {% else %}
+            <img src="{{song.album.album_cover_url}}">
+            {% endif %}
+
+            <span class="track-card-text">
+                <a href="" class="track-title">{{song.song_name}}</a>
+                <div class="track-subtitle">
+                    <a href="">Edit</a> | <a href="">Delete</a>
+                </div>
+
+            </span>
+        </div>
+        {% endfor %}
+
+</section>
+
+<section class="my-4">
+    <h2>Your Albums</h2>
+
+    <div class="d-flex flex-row flex-wrap gap-2 align-items-start">
+        <button type="button" class="btn-box" data-bs-toggle="modal" data-bs-target="#album-details">
+            Add Album
+        </button>
+
+        <div class="modal fade" id="album-details" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="album-details-title">Album Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <form method="post" enctype="multipart/form-data">
+                            <label for="albumname">Album name :
+                                <input type="text" name="albumname" id="albumname" />
+                            </label>
+
+                            <label for="cover">Add Album Cover :
+                                <input type="file" name="cover" class="form-control" id="cover" accept=".jpg, .jpeg" />
+                            </label>
+
+                            Select Tracks :
+                            <div class="track-list d-flex flex-row flex-wrap">
+                                {% for song in user.songs if not song.album_id %}
+
+                                <input type="checkbox" class="btn-check" name="song-{{song.id}}" id="{{song.id}}"
+                                    autocomplete="off">
+
+                                <label class="btn btn-box btn-outline-secondary m-1"
+                                    for="{{song.id}}">{{song.song_name}}</label><br>
+                                {% endfor %}
+                            </div>
+
+                            <button type="button" class="btn-box" data-bs-dismiss="modal">Close</button>
+                            <input type="submit" name="album" value="Save Changes" class="btn-success"
+                                data-bs-dismiss="modal">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if user.albums == [] %}
+        <p>You have no albums uploaded.</p>
+        {% endif %}
+
+        {% for album in user.albums %}
+        <div class="card-box">
+            <img src="{{album.album_cover_url}}" width="150px">
+            <div class="track-title">{{album.album_name}}</div>
+            <div class="track-subtitle">
+                <a href="">Edit</a> | <a href="">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
+
+{% endblock %}

@@ -1,0 +1,24 @@
+<div class="navbar">
+    <div class="title">
+        <a href="/">STR3AM</a>
+    </div>
+
+    {% if user %}
+    <div class="profile-dropdown"><img src="{{user.pfp_url}}" width="55px"><span>@{{user.username}}</span>
+
+        <div class="profile-dropdown-content">
+            {% if not user.is_admin %}
+            <a href="/profile">profile</a>
+            <a href="/creator">creator's profile</a>
+            {% endif %}
+
+            <a href="/logout">log out</a>
+        </div>
+        </a>
+        {% else %}
+        <div class="nav-options">
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        </div>
+        {% endif %}
+    </div>

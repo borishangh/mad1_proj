@@ -7,3 +7,5 @@ import config
 import models
 
 import routes
+import creator_routes
+import player_routes
