@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+st3am | login
+{% endblock %}
+
+{% block content %}
+<h1>Login</h1>
+<form method="post">
+    <label for="username" class="form-label" required>Username :
+        <input type="text" name="username" class="form-control" id="username" required />
+    </label>
+    <label for="password" class="form-label" required>Password :
+        <input type="password" name="password" class="form-control" id="password" required />
+    </label>
+    <input type="submit" value="Login" class="btn btn-success mt-3">
+
+    <p class="mt-4">
+        or <a href="/register">Register</a> instead.
+    </p>
+</form>
+{% endblock %}

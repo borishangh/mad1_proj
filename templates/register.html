@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+st3am | register
+{% endblock %}
+
+{% block content %}
+<h1>Register</h1>
+<form method="post" enctype=multipart/form-data>
+    <label for="username" class="form-label">Username :
+        <input type="text" name="username" class="form-control" id="username" required />
+    </label>
+    <label for="email" class="form-label">Email :
+        <input type="email" name="email" class="form-control" id="email" required />
+    </label>
+    <label for="password" class="form-label">Password :
+        <input type="password" name="password" class="form-control" id="password" required />
+    </label>
+
+    <label for="pfp" class="form-label my-3">Profile Picture <span class="text-muted">(Optional)</span> :
+        <input type="file" name="pfp" class="form-control" id="pfp" accept=".jpg, .jpeg" />
+    </label>
+
+    <input type="submit" value="Register" class="btn btn-success my-3">
+
+    <p class="mt-4">
+        or <a href="/login">Log in</a> instead.
+    </p>
+</form>
+{% endblock %}

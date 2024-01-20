@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'IBM Plex Mono', monospace;
+}
+
+body {
+    background: lightpink;
+    width: fit-content;
+    margin: auto;
+    font-size: 20px;
+}
+
+a {
+    color: #111;
+    text-decoration: none;
+    border-bottom: 1px solid #111;
+}
+
+a:hover {
+    font-style: italic;
+}
+
+button,
+input[type="submit"] {
+    background: #eee;
+    padding: 5px 12px;
+    border: 1px solid #111;
+    border-radius: 0;
+}
+
+button:active,
+input[type="submit"]:active,
+a:active {
+    color: #eee;
+    background: #111;
+}
+
+form {
+    background-color: #fff5;
+    border: 1px solid black;
+    padding: 15px 15px 30px 15px;
+    margin: 10px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+form input {
+    width: 100%;
+    margin: 5px 0;
+    padding: 4px 8px;
+    font-size: 22px;
+}
