@@ -18,7 +18,7 @@ creator | STR3M
             {% if user.songs %}
             <ol>
                 {% for song in user.songs | sort(attribute='plays', reverse=True) %}
-                <li><a href="" class="track-title">{{ song.song_name }}</a> // {{ song.plays }} plays</li>
+                <li><a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{ song.song_name }}</a> // {{ song.plays }} plays</li>
                 {% endfor %}
             </ol>
             {% else %}
@@ -39,7 +39,6 @@ creator | STR3M
         <div class="modal fade" id="song-details" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-
                     <div class="modal-header">
                         <h5 class="modal-title" id="song-details-title">Song Details</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -47,6 +46,7 @@ creator | STR3M
 
                     <div class="modal-body">
                         <form method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="song">
                             <label for="songname">Song name :
                                 <input type="text" name="songname" id="songname" />
                             </label>
@@ -62,7 +62,7 @@ creator | STR3M
 
                             <button type="button" class="btn-box" data-bs-dismiss="modal">Close</button>
 
-                            <input type="submit" name="song" value="Save Changes" data-bs-dismiss="modal">
+                            <input type="submit" name="action" value="Create New Song" data-bs-dismiss="modal">
                         </form>
                     </div>
                 </div>
@@ -84,11 +84,13 @@ creator | STR3M
             {% endif %}
 
             <span class="track-card-text">
-                <a href="" class="track-title">{{song.song_name}}</a>
-                <div class="track-subtitle">
-                    <a href="">Edit</a> | <a href="">Delete</a>
-                </div>
+                <a href="" class="track-title">
+                    {{song.song_name}}</a>
 
+                <div class="track-subtitle">
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#edit-song-details">Edit</a> |
+                    <a href="">Delete</a>
+                </div>
             </span>
         </div>
         {% endfor %}

@@ -6,6 +6,6 @@ app = Flask(__name__)
 import config
 import models
 
+import player_routes
 import routes
 import creator_routes
-import player_routes

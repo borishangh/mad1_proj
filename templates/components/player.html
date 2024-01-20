@@ -1,0 +1,151 @@
+<style>
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    :root {
+        --player-percent: 0%;
+    }
+
+    .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        /* Preferred icon size */
+        display: inline-block;
+        line-height: 1;
+        text-transform: none;
+        letter-spacing: normal;
+        word-wrap: normal;
+        white-space: nowrap;
+        direction: ltr;
+
+        /* Support for all WebKit browsers. */
+        -webkit-font-smoothing: antialiased;
+        /* Support for Safari and Chrome. */
+        text-rendering: optimizeLegibility;
+
+        /* Support for Firefox. */
+        -moz-osx-font-smoothing: grayscale;
+
+        /* Support for IE. */
+        font-feature-settings: 'liga';
+    }
+
+    #music-player::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: block;
+        width: var(--player-percent);
+        mix-blend-mode: difference;
+        height: 100%;
+        background: #fff;
+        z-index: 10;
+    }
+
+    #music-list li {
+        padding: 5px;
+        list-style: none;
+    }
+
+    #music-player {
+        background: #eee;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        padding: 10px;
+        left: 0;
+    }
+
+    #music-player .panel {
+        display: flex;
+        border: 1px solid #222;
+        align-items: center;
+    }
+
+    #music-player .panel>* {
+        padding: 10px 12px;
+    }
+
+    #music-player .panel form {
+        display: flex;
+        flex-direction: row;
+        z-index: 20;
+        gap: 20px;
+    }
+
+    #music-player .panel form button {
+        color: #111;
+        border: 1px solid #222;
+    }
+
+    #music-player .panel form button:active {
+        color: white;
+        border: 1px solid #222;
+        background: #222;
+    }
+
+    #music-player .panel::before {
+        content: 'Now Playing';
+        background: #eee;
+        font-size: 12px;
+        position: absolute;
+        top: 0px;
+        right: 30px;
+        padding: 2px 5px;
+    }
+
+    .song-title {
+        font-weight: 900;
+        border-left: 1px solid #222;
+        border-right: 1px solid #222;
+        background: white;
+    }
+
+    #time {
+        display: flex;
+    }
+</style>
+
+<div id="music-player">
+    <div class="panel">
+        {% if current_track %}
+        <form action="{{ url_for('play') }}" method="post">
+            <input type="hidden" name="file" value="{{ current_track.file if current_track.file else '#' }}">
+            <button type="submit" name="action" value="play" class="material-icons">play_arrow</button>
+            <button type="submit" name="action" value="pause" class="material-icons">pause</button>
+        </form>
+
+        <p class="song-title">{{ current_track.title if current_track.title else "..." }}</p>
+
+        <p id="time"><span id="seconds-played">00:00</span>/ <span id="duration">{{ current_track.length if
+                current_track.length
+                else "00:00" }}</span></p>
+        {% endif %}
+
+
+        <script>
+            setInterval(function () {
+                fetch('/get_seconds_played')
+                    .then(response => response.json())
+                    .then(data => {
+                        elapsed = data.current_seconds_played.split(":")
+                        elapsed_sec = parseInt(elapsed[0]) * 60 + parseInt(elapsed[1])
+                        duration = document.getElementById('duration').innerHTML.split(':')
+                        duration_sec = parseInt(duration[0]) * 60 + parseInt(duration[1])
+
+                        if (duration_sec != 0)
+                            document.documentElement.style.setProperty("--player-percent", `${elapsed_sec * 100 / duration_sec}%`)
+
+                        document.getElementById('seconds-played').innerText = data.current_seconds_played;
+                    })
+                    .catch(error => console.error('Error:', error));
+            }, 500);
+        </script>
+    </div>
+
+</div>

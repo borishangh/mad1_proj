@@ -5,20 +5,21 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 
 from models import db, User, Song, Album, Rating
 from app import app
-from routes import auth_required, save_img
+from routes import auth_required, save_img, current_track
 
 
 @app.route("/creator")
 @auth_required
 def creator():
     user = user = User.query.get(session["user_id"])
-    return render_template("creator.html", user=user)
+    return render_template("creator.html", user=user,  current_track=current_track)
 
 
 @app.route("/creator", methods=["POST"])
 @auth_required
 def creator_post():
     user = User.query.get(session["user_id"])
+    print(":::::::::::", request.form)
 
     if "song" in request.form:
         songname = request.form.get("songname")
@@ -46,11 +47,9 @@ def creator_post():
 
         db.session.add(song)
         db.session.commit()
-
-        print(songname, lyrics, songfile)
         flash("Track added successfully", "success")
 
-    if "album" in request.form:
+    elif "album" in request.form:
         album_name = request.form.get("albumname")
         cover_file = request.files["cover"]
 
@@ -75,5 +74,17 @@ def creator_post():
 
         db.session.commit()
         flash("Album created sucessfully", "success")
+
+    else:
+        song_id = request.form.get("song-id")
+        song = Song.query.get(song_id)
+
+        # songname = request.form.get("songname")
+        # lyrics = request.form.get("lyrics")
+
+        # song.song_name = songname
+        # song.lyrics = lyrics
+
+        # db.session.commit()
 
     return redirect(url_for("creator"))
