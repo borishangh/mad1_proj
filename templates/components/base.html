@@ -34,6 +34,8 @@
         {% include '/components/nav.html' %}
     </header>
     <main>
+        {% include '/components/sidebar.html' %}
+        
         {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
         {% for category,message in messages %}
@@ -50,7 +52,7 @@
     </main>
 
     <footer>
-        {% include '/components/player.html'   %}
+        {% include '/components/player.html' %}
     </footer>
 
 

@@ -19,7 +19,6 @@ def creator():
 @auth_required
 def creator_post():
     user = User.query.get(session["user_id"])
-    print(":::::::::::", request.form)
 
     if "song" in request.form:
         songname = request.form.get("songname")

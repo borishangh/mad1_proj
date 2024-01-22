@@ -1,0 +1,53 @@
+{% extends '/components/base.html' %}
+
+{% block title %}
+Profile | lalala
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .profile-body {
+        display: flex;
+    }
+    .profile-body form{
+        background: transparent;
+    }
+</style>
+
+<h1 class="my-2 mx-3"><span class="text-muted">@{{user.username}}</span> : profile / edit details</h1>
+
+
+<div class="profile-body">
+    <div class="card-box my-4 mx-4">
+        <img src="{{user.pfp_url}}" alt="">
+        <div class="card-title">@{{user.username}}</div>
+        <div class="card-subtitle">{{user.email}}</div>
+        <div class="card-subtitle">STR3AM3R since {{user.created_at}}</div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+        <label for="username">New Username :
+            <input type="text" name="username" id="username" value="{{user.username}}" />
+        </label>
+        <label for="email" class="form-label">New Email :
+            <input type="email" name="email" id="email" required value="{{user.email}}" />
+        </label>
+
+        <label for="pfp" class="form-label">Change Profile Picture :
+            <input type="file" name="pfp" class="form-control" id="pfp" accept=".jpg, .jpeg" />
+        </label>
+
+        <label for="cpassword">Current Password :
+            <input type="password" name="cpassword" id="cpassword" placeholder="********" />
+        </label>
+        <label for="password">New Password :
+            <input type="password" name="password" id="password" placeholder="********" />
+        </label>
+
+        <input type="submit" value="Save Changes" class="btn-success mt-4">
+    </form>
+
+</div>
+
+{% endblock %}

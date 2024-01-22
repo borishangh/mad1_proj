@@ -1,0 +1,59 @@
+<style>
+    .sidebar {
+        position: fixed;
+        top: var(--nav-height);
+        left: 0;
+        height: 100%;
+        overflow: auto;
+        width: var(--sidebar-width);
+        background: #eee;
+        border-right: 1px solid #111;
+        padding: 20px 20px 150px 20px;
+    }
+
+    .sidebar h2 {
+        font-size: 40px;
+    }
+
+    .sidebar .user {
+        font-weight: 400;
+    }
+
+    .sidebar-lyrics {
+        font-size: 16px;
+        white-space: pre-wrap;
+    }
+
+    .byline {
+        background: #fff;
+    }
+</style>
+
+{% if current_track %}
+
+
+<div class="sidebar">
+    {% if current_track.song %}
+
+
+
+    <img src="{{current_track.album.album_cover_url if current_track.album else 'static/default_album.jpg'}}"
+        class="sidebar-album-img">
+
+    <h2>{{current_track.song.song_name}}
+        <span class="text-muted user">//
+            <img src="{{current_track.artist.pfp_url}}" height=40px>
+            @{{current_track.artist.username}}</span>
+    </h2>
+
+    <div class="byline my-4">played {{current_track.song.plays}} times since {{current_track.song.created_at}}</div>
+
+    <div class="sidebar-lyrics">{{current_track.song.lyrics}}</div>
+
+
+
+    {% else %}
+    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit, distinctio!
+    {% endif %}
+</div>
+{% endif %}

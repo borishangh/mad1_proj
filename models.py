@@ -54,6 +54,8 @@ class Song(db.Model):
     creator_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     album_id = db.Column(db.Integer, db.ForeignKey("albums.id"))
 
+    created_at = db.Column(db.String(10), default=datetime.now().strftime("%B %Y"))
+
     lyrics = db.Column(db.Text)
     plays = db.Column(db.Integer, default=0)
 

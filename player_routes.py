@@ -6,41 +6,58 @@ from flask import (
     url_for,
     flash,
     session,
-    jsonify,
+    jsonify
 )
 from models import db, User, Song, Album, Rating
 from app import app
-
+from sqlalchemy.orm import make_transient
 from threading import Thread
 import pygame
 
 pygame.mixer.init()
-current_track = {"file": None, "title": None, "length": None}
+current_track = {"song": None, "artist": None, "album": None, "length": None}
 
 
-def play_music(file, title, length):
-    pygame.mixer.music.load(file)
-    pygame.mixer.music.play()
-    current_track["file"] = file
-    current_track["title"] = title
+def play_music(song_id, length):
+    # play and increment plays
+
+    with app.app_context():
+        song = Song.query.get(song_id)
+        current_track["song"] = song
+
+        artist = User.query.get(song.user.id)
+        make_transient(artist)
+        current_track["artist"] = artist
+        
+        if song.album:
+            album = Album.query.get(song.album.id)
+            make_transient(album)
+            current_track["album"] = album
+
+        song.plays += 1
+        db.session.commit()
+
+        pygame.mixer.music.load(song.song_url)
+        pygame.mixer.music.play()
+
     current_track["length"] = length
-
 
 def pause_music():
     pygame.mixer.music.pause()
 
-
 def stop_music():
+    print("stoooooooop")
     pygame.mixer.music.stop()
-    current_track["file"] = None
-    current_track["title"] = None
+    current_track["song"] = None
+    current_track["artist"] = None
+    current_track["album"] = None
     current_track["length"] = None
 
 
 @app.route("/get_seconds_played")
 def get_seconds_played_route():
-    ms = pygame.mixer.music.get_pos() / 1000
-    formatted_pos = "{:02}:{:02}".format(*divmod(int(ms), 60))
+    sec = pygame.mixer.music.get_pos() / 1000
+    formatted_pos = "{:02}:{:02}".format(*divmod(int(sec), 60))
     return jsonify({"current_seconds_played": formatted_pos})
 
 
@@ -54,27 +71,19 @@ def play():
             pause_music()
     else:
         action = request.args.get("action")
-        song_id = request.args.get("song_id")
 
-        if action == "pause":
-            pause_music()
-        elif action == "play":
+        if action == "play":
+            song_id = request.args.get("song_id")
             song = Song.query.get(song_id)
-            title = song.song_name
-            file_path = song.song_url
 
-            if current_track["file"] == file_path:
+            if current_track["song"] and current_track["song"].id == song_id:
                 pygame.mixer.music.unpause()
             else:
                 stop_music()
-                length = pygame.mixer.Sound(file_path).get_length()
+                length = pygame.mixer.Sound(song.song_url).get_length()
                 formatted_len = "{:02}:{:02}".format(*divmod(int(length), 60))
-                Thread(target=play_music, args=(file_path, title, formatted_len)).start()
+                Thread(target=play_music, args=(song_id, formatted_len)).start()
+        elif action == "pause":
+            pause_music()
 
     return redirect(request.referrer)
-
-
-@app.route("/stop", methods=["POST"])
-def stop():
-    stop_music()
-    return redirect(url_for("index"))

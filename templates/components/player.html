@@ -47,23 +47,20 @@
         z-index: 10;
     }
 
-    #music-list li {
-        padding: 5px;
-        list-style: none;
-    }
-
     #music-player {
         background: #eee;
         position: fixed;
         width: 100%;
+        height: var(--player-height);
         bottom: 0;
         padding: 10px;
         left: 0;
+        border-top: 1px solid #111;
     }
 
     #music-player .panel {
         display: flex;
-        border: 1px solid #222;
+        border: 1px solid #555;
         align-items: center;
     }
 
@@ -74,6 +71,7 @@
     #music-player .panel form {
         display: flex;
         flex-direction: row;
+        background: transparent;
         z-index: 20;
         gap: 20px;
     }
@@ -111,21 +109,21 @@
     }
 </style>
 
+{% if current_track %}
+
 <div id="music-player">
     <div class="panel">
-        {% if current_track %}
         <form action="{{ url_for('play') }}" method="post">
-            <input type="hidden" name="file" value="{{ current_track.file if current_track.file else '#' }}">
+            <input type="hidden" name="current" value="{{ current_track }}">
             <button type="submit" name="action" value="play" class="material-icons">play_arrow</button>
             <button type="submit" name="action" value="pause" class="material-icons">pause</button>
         </form>
 
-        <p class="song-title">{{ current_track.title if current_track.title else "..." }}</p>
+        <p class="song-title">{{ current_track.song.song_name if current_track.song.song_name else "..." }}</p>
 
         <p id="time"><span id="seconds-played">00:00</span>/ <span id="duration">{{ current_track.length if
                 current_track.length
                 else "00:00" }}</span></p>
-        {% endif %}
 
 
         <script>
@@ -149,3 +147,4 @@
     </div>
 
 </div>
+{% endif %}

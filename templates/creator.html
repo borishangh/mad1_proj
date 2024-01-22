@@ -5,20 +5,26 @@ creator | STR3M
 {% endblock %}
 
 {% block content %}
-<h1 class="mb-4">@{{user.username}} : creator profile</h1>
-<section class="my-4">
+<h1 class="my-2 mx-3"><span class="text-muted">@{{user.username}}</span> : creator profile</h1>
+
+<section class="my-4 mx-4">
     <div class="d-flex d-row gap-4">
         <div class="card-box">
-            <img src="{{user.pfp_url}}" width="200px">
-            <span>STR3AM3R since {{user.created_at}}</span>
-            <span> played {{ user.songs | map(attribute='plays') | sum }} times</span>
+            <img src="{{user.pfp_url}}" width="250px">
+            <span class="card-subtitle">STR3AM3R since {{user.created_at}} </span>
+            <span>
+                <b>played // {{ user.songs |
+                    map(attribute='plays') | sum }} times</b>
+            </span>
+
         </div>
         <div>
             <h3>Best Performing</h3>
             {% if user.songs %}
             <ol>
                 {% for song in user.songs | sort(attribute='plays', reverse=True) %}
-                <li><a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{ song.song_name }}</a> // {{ song.plays }} plays</li>
+                <li><a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{
+                        song.song_name }}</a> // {{ song.plays }} plays</li>
                 {% endfor %}
             </ol>
             {% else %}
@@ -28,8 +34,8 @@ creator | STR3M
     </div>
 </section>
 
-<section class="my-4">
-    <h2>Your Tracks</h2>
+<section class="my-4 mx-4">
+    <h2 >Your Tracks</h2>
 
     <div class="d-flex flex-row flex-wrap gap-2 align-items-start">
         <button type="button" class="btn-box" data-bs-toggle="modal" data-bs-target="#song-details">
@@ -84,7 +90,7 @@ creator | STR3M
             {% endif %}
 
             <span class="track-card-text">
-                <a href="" class="track-title">
+                <a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">
                     {{song.song_name}}</a>
 
                 <div class="track-subtitle">
@@ -97,7 +103,7 @@ creator | STR3M
 
 </section>
 
-<section class="my-4">
+<section class="my-4 mx-4">
     <h2>Your Albums</h2>
 
     <div class="d-flex flex-row flex-wrap gap-2 align-items-start">

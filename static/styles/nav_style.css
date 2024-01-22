@@ -1,10 +1,10 @@
 .navbar {
     display: flex;
     position: fixed;
-    height: 55px;
+    height: var(--nav-height);
     top: 0;
     left: 0;
-    padding: 0;
+    padding: 0 15px 0 0;
     width: 100vw;
     background: #eee;
     font-weight: 500;
@@ -22,7 +22,7 @@
     background: white;
 }
 
-.navbar .title a:hover{
+.navbar .title a:hover {
     font-style: normal;
 }
 
@@ -81,4 +81,8 @@
 
 .nav-options a:hover {
     background: #ddd;
+}
+
+.profile-dropdown-content a:active {
+    background: #111;
 }

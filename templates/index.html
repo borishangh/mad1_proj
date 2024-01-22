@@ -4,6 +4,32 @@
 home | st3am
 {% endblock %}
 
+{% block style %}
+<style>
+    .featured-song-container {
+        display: flex;
+        flex-wrap: wrap;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-this is the homepage
+
+<div class="featured-songs">
+    <h2>Featured Songs</h2>
+    <div class="featured-song-container">
+        {% for song in featured.songs %}
+        <div class="card-box mx-2 my-2">
+            <img src="{{song.album.album_cover_url if song.album else 'static/default_album.jpg'}}" width="200px">
+            
+            <a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
+            <div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
+                ""}}</div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+
 {% endblock %}
