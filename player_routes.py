@@ -8,6 +8,7 @@ from flask import (
     session,
     jsonify,
 )
+import os
 from models import db, User, Song, Album, Rating
 from app import app
 from sqlalchemy.orm import make_transient
@@ -19,13 +20,13 @@ current_track = {"song": None, "artist": None, "album": None, "length": None}
 
 
 def play_music(song_id, length):
-    # play and increment plays
-
     with app.app_context():
         song = Song.query.get(song_id)
+        song_url = os.path.join("static", song.song_url)
+        make_transient(song)
         current_track["song"] = song
 
-        artist = User.query.get(song.user.id)
+        artist = User.query.get(song.creator_id)
         make_transient(artist)
         current_track["artist"] = artist
 
@@ -37,7 +38,7 @@ def play_music(song_id, length):
         song.plays += 1
         db.session.commit()
 
-        pygame.mixer.music.load(song.song_url)
+        pygame.mixer.music.load(song_url)
         pygame.mixer.music.play()
 
     current_track["length"] = length
@@ -82,7 +83,8 @@ def play():
                 pygame.mixer.music.unpause()
             else:
                 stop_music()
-                length = pygame.mixer.Sound(song.song_url).get_length()
+                song_url = os.path.join("static", song.song_url)
+                length = pygame.mixer.Sound(song_url).get_length()
                 formatted_len = "{:02}:{:02}".format(*divmod(int(length), 60))
                 Thread(target=play_music, args=(song_id, formatted_len)).start()
         elif action == "pause":
@@ -101,14 +103,14 @@ from routes import auth_required, current_track
 def search_songs():
     results = Song.query.all()
     # print('genre' in request.args.keys())
-    if 'search' in request.args.keys():
+    if "search" in request.args.keys():
         search_query = request.args.get("search", "")
         results = Song.query.filter(Song.song_name.ilike(f"%{search_query}%")).all()
 
-    elif 'genre' in request.args.keys():
+    elif "genre" in request.args.keys():
         genre_id = request.args.get("genre", "")
         results = Song.query.filter_by(genre_id=genre_id).all()
-        
+
     user = User.query.get(session["user_id"])
     genres = Genre.query.all()
 

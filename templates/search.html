@@ -1,0 +1,48 @@
+{% extends '/components/base.html' %}
+
+{% block title %}
+Search | STR3AM
+{% endblock %}
+
+{% block content %}
+<style>
+	form.search-form {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 10px;
+	}
+
+	.search-form input[type="text"] {
+		flex-grow: 2;
+	}
+</style>
+
+<section class="my-4">
+	<form method="get" class="search-form">
+		<input type="text" name="search" id="search" placeholder="Type here" autocomplete="off">
+		<button type="submit" class="btn-box">Search</button>
+	</form>
+
+	<form class="genre-list d-block">
+		{% for genre in genres %}
+		<button type="submit" name="genre" value="{{genre.id}}" class="btn-box mb-2">{{genre.name}}</button>
+		{% endfor %}
+	</form>
+</section>
+
+<hr>
+
+<section class="d-flex flex-row flex-wrap">
+	{% for song in results %}
+	<div class="card-box mx-2 my-2">
+		<img src="{{song.album.album_cover_url if song.album else 'static/default_album.jpg'}}" width="200px">
+
+		<a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
+		<div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
+			""}}</div>
+	</div>
+	{% endfor %}
+</section>
+
+{% endblock %}

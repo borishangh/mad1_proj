@@ -10,7 +10,8 @@ Profile | STR3AM
     .profile-body {
         display: flex;
     }
-    .profile-body form{
+
+    .profile-body form {
         background: transparent;
     }
 </style>
@@ -20,7 +21,7 @@ Profile | STR3AM
 
 <div class="profile-body">
     <div class="card-box my-4 mx-4">
-        <img src="{{user.pfp_url}}" alt="">
+        <img src="{{url_for('static',filename=user.pfp_url)}}" alt="">
         <div class="card-title">@{{user.username}}</div>
         <div class="card-subtitle">{{user.email}}</div>
         <div class="card-subtitle">STR3AM3R since {{user.created_at}}</div>

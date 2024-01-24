@@ -10,7 +10,7 @@ creator | STR3M
 <section class="my-4 mx-4">
   <div class="d-flex d-row gap-4">
     <div class="card-box">
-      <img src="{{user.pfp_url}}" width="250px">
+      <img src="{{url_for('static', filename=user.pfp_url)}}" width="250px">
       <span class="card-subtitle">STR3AM3R since {{user.created_at}} </span>
       <span>
         <b>played // {{ user.songs |
@@ -91,7 +91,7 @@ creator | STR3M
       {% if song.album_id == None %}
       <img src="/static/default_album.jpg">
       {% else %}
-      <img src="{{song.album.album_cover_url}}">
+      <img src="{{url_for('static', filename=song.album.album_cover_url)}}">
       {% endif %}
 
       <span class="track-card-text">
@@ -159,7 +159,7 @@ creator | STR3M
 
     {% for album in user.albums %}
     <div class="card-box">
-      <img src="{{album.album_cover_url}}" width="150px">
+      <img src="{{url_for('static', filename=album.album_cover_url)}}" width="150px">
       <div class="track-title">{{album.album_name}}</div>
       <div class="track-subtitle">
         <a href="">Edit</a> | <a href="">Delete</a>

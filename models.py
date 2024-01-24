@@ -11,7 +11,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    pfp_url = db.Column(db.String(255), default="static/default_pfp.jpg")
+    pfp_url = db.Column(db.String(255), default="default_pfp.jpg")
 
     is_admin = db.Column(db.Boolean, nullable=False, default=False)
     passhash = db.Column(db.String(255), nullable=False)
@@ -45,7 +45,7 @@ class Album(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     album_name = db.Column(db.String(255), nullable=False)
     creator_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    album_cover_url = db.Column(db.String(255), default="static/default_album.jpg")
+    album_cover_url = db.Column(db.String(255), default="default_album.jpg")
     created = db.Column(db.DateTime, default=datetime.utcnow)
 
     # Relationship with songs
@@ -60,9 +60,7 @@ class Song(db.Model):
 
     creator_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     album_id = db.Column(db.Integer, db.ForeignKey("albums.id"))
-    genre_id = db.Column(
-        db.Integer, db.ForeignKey("genres.id")
-    )  # Added genre relationship
+    genre_id = db.Column(db.Integer, db.ForeignKey("genres.id"))
 
     created_at = db.Column(db.String(10), default=datetime.now().strftime("%B %Y"))
 
@@ -98,7 +96,7 @@ class Playlist(db.Model):
     __tablename__ = "playlists"
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(255), nullable=False)
-    cover_url = db.Column(db.String(255), default="static/default_playlist.jpg")
+    cover_url = db.Column(db.String(255), default="default_playlist.jpg")
     creator_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
     songs = db.relationship(
@@ -109,14 +107,6 @@ class Playlist(db.Model):
 with app.app_context():
     db.create_all()
 
-    genres = ["Rock", "Pop", "Hip Hop", "Electronic", "Jazz", "Country", "Classical"]
-    for genre_name in genres:
-        genre = Genre.query.filter_by(name=genre_name).first()
-        if not genre:
-            genre = Genre(name=genre_name)
-            db.session.add(genre)
-            db.session.commit()
-
     admin = User.query.filter_by(is_admin=True).first()
     if not admin:
         admin = User(
@@ -124,3 +114,11 @@ with app.app_context():
         )
         db.session.add(admin)
         db.session.commit()
+
+    genres = ["Rock", "Pop", "Hip Hop", "Electronic", "Jazz", "Country", "Classical"]
+    for genre_name in genres:
+        genre = Genre.query.filter_by(name=genre_name).first()
+        if not genre:
+            genre = Genre(name=genre_name)
+            db.session.add(genre)
+            db.session.commit()

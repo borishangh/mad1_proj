@@ -38,11 +38,11 @@ def creator_post():
             return redirect(url_for("creator"))
 
         song_url = os.path.join(
-            app.config["UPLOAD_FOLDER"],
             "tracks",
             str(uuid.uuid4().hex) + "_track.mp3",
         )
-        songfile.save(song_url)
+
+        songfile.save(os.path.join("static", song_url))
 
         song = Song(
             song_name=songname,
@@ -64,11 +64,10 @@ def creator_post():
 
         if cover_file:
             album_cover_url = os.path.join(
-                app.config["UPLOAD_FOLDER"],
                 "albums",
                 str(uuid.uuid4().hex) + "_album.jpg",
             )
-            save_img(cover_file, album_cover_url)
+            save_img(cover_file, os.path.join("static", album_cover_url))
             album.album_cover_url = album_cover_url
 
         db.session.add(album)

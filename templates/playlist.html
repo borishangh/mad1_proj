@@ -1,0 +1,32 @@
+{% extends '/components/base.html' %}
+
+{% block title %}
+home | STR3AM
+{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="static/styles/style.css">
+<link rel="stylesheet" href="static/styles/nav_style.css">
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="d-flex mt-3 mb-5 gap-3 align-items-end">
+        <img src="{{url_for('static', filename=playlist.cover_url)}}" width="150px">
+        <div class="vr"></div>
+        <div>
+            <h2 class="">{{playlist.name}} <br> <span class="text-muted">@{{user.username}}</span></h2>
+        </div>
+    </div>
+
+    {% for song in songs %}
+    <div class="card-box">
+        <img src="{{url_for('static', filename=song.album.album_cover_url)}}" alt="">
+        <a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
+        <div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
+            ""}}</div>
+    </div>
+    {% endfor %}
+</section>
+
+{% endblock %}

@@ -52,6 +52,7 @@ def index():
         "index.html", user=user, current_track=current_track, featured=featured
     )
 
+
 @app.route("/admin")
 @auth_required
 def admin():
@@ -111,11 +112,10 @@ def register_post():
 
     user = User(username=username, email=email, password=password)
     pfp_file = request.files["pfp"]
+
     if pfp_file:
-        pfp_url = os.path.join(
-            app.config["UPLOAD_FOLDER"], "accounts", str(uuid.uuid4().hex) + "_pfp.jpg"
-        )
-        save_img(pfp_file, pfp_url)
+        pfp_url = os.path.join("accounts", str(uuid.uuid4().hex) + "_pfp.jpg")
+        save_img(pfp_file, os.path.join("static", pfp_url))
         user.pfp_url = pfp_url
 
     db.session.add(user)
@@ -159,15 +159,14 @@ def profile_post():
         return redirect(url_for("profile"))
 
     pfp_file = request.files["pfp"]
+
     if pfp_file:
-        if user.pfp_url == "static/default_pfp.jpg":
-            pfp_url = os.path.join(
-                app.config["UPLOAD_FOLDER"],
-                "accounts",
-                str(uuid.uuid4().hex) + "_pfp.jpg",
-            )
-            user.pfp_url = pfp_url
-        save_img(pfp_file, user.pfp_url)
+        pfp_url = os.path.join(
+            "accounts",
+            str(uuid.uuid4().hex) + "_pfp.jpg",
+        )
+        user.pfp_url = pfp_url
+        save_img(pfp_file, os.path.join("static", pfp_url))
 
     user.username = username
     user.email = email
