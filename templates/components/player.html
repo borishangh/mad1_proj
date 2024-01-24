@@ -60,11 +60,12 @@
 
     #music-player .panel {
         display: flex;
+        align-items: center;
         border: 1px solid #555;
         align-items: center;
     }
 
-    #music-player .panel>* {
+    #music-player .panel>*:not(.rate) {
         padding: 10px 12px;
     }
 
@@ -104,8 +105,52 @@
         background: white;
     }
 
-    #time {
-        display: flex;
+    .rate {
+        float: left;
+        padding: 0;
+        margin: 0;
+        z-index: 10;
+    }
+
+    .rate:not(:checked)>input {
+        position: absolute;
+        top: -9999px;
+    }
+
+    .rate:not(:checked)>label {
+        position: relative;
+        float: right;
+        width: 1.1em;
+        overflow: hidden;
+        white-space: nowrap;
+        cursor: pointer;
+        font-size: 30px;
+        color: #ccc;
+    }
+
+    .rate:not(:checked)>label:before {
+        content: '★ ';
+        position: absolute;
+        top: -14px;
+        font-size: 40px;
+        display: block;
+    }
+
+    .rate>input:checked~label {
+        color: #ffc700;
+    }
+
+    .rate:not(:checked)>label:hover,
+    .rate:not(:checked)>label:hover~label {
+        color: #deb217;
+    }
+
+    .rate>input:checked+label:hover,
+    .rate>input:checked+label:hover~label,
+    .rate>input:checked~label:hover,
+    .rate>input:checked~label:hover~label,
+    .rate>label:hover~input:checked~label {
+        color: #c59b08;
     }
 </style>
 
@@ -121,7 +166,26 @@
 
         <p class="song-title">{{ current_track.song.song_name if current_track.song.song_name else "..." }}</p>
 
-        <p id="time"><span id="seconds-played">00:00</span>/ <span id="duration">{{ current_track.length if
+        {% if current_track.song %}
+
+        <p class="song-artist">@{{current_track.artist.username}} //</p>
+        <div class="rate">
+            <input type="radio" id="star5" name="rate" value="5" />
+            <label for="star5" title="text">&zwnj;</label>
+            <input type="radio" id="star4" name="rate" value="4" />
+            <label for="star4" title="text">&zwnj;</label>
+            <input type="radio" id="star3" name="rate" value="3" />
+            <label for="star3" title="text">&zwnj;</label>
+            <input type="radio" id="star2" name="rate" value="2" />
+            <label for="star2" title="text">&zwnj;</label>
+            <input type="radio" id="star1" name="rate" value="1" />
+            <label for="star1" title="text">&zwnj;</label>
+        </div>
+
+        {% endif %}
+
+        <p id="time" class="d-flex"><span id="seconds-played">00:00</span>/ <span id="duration">{{ current_track.length
+                if
                 current_track.length
                 else "00:00" }}</span></p>
 

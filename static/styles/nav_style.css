@@ -11,6 +11,7 @@
     justify-content: flex-end;
     align-items: center;
     border-bottom: 1px solid #111;
+    z-index: 10;
 }
 
 .navbar .title {
@@ -18,8 +19,17 @@
     font-weight: 900;
     border-right: 1px solid #111;
     padding: 4px 8px;
-    margin-right: auto;
     background: white;
+    margin-right: auto;
+}
+
+.navbar #search-link {
+    font-size: 20px;
+    font-weight: 400;
+    display: flex;
+    margin: 0 20px;
+    align-items: center;
+
 }
 
 .navbar .title a:hover {

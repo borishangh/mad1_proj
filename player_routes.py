@@ -6,7 +6,7 @@ from flask import (
     url_for,
     flash,
     session,
-    jsonify
+    jsonify,
 )
 from models import db, User, Song, Album, Rating
 from app import app
@@ -28,7 +28,7 @@ def play_music(song_id, length):
         artist = User.query.get(song.user.id)
         make_transient(artist)
         current_track["artist"] = artist
-        
+
         if song.album:
             album = Album.query.get(song.album.id)
             make_transient(album)
@@ -42,8 +42,10 @@ def play_music(song_id, length):
 
     current_track["length"] = length
 
+
 def pause_music():
     pygame.mixer.music.pause()
+
 
 def stop_music():
     print("stoooooooop")
@@ -87,3 +89,40 @@ def play():
             pause_music()
 
     return redirect(request.referrer)
+
+
+from models import Genre
+from routes import auth_required, current_track
+
+
+# Route to handle the search
+@app.route("/search", methods=["GET", "POST"])
+@auth_required
+def search_songs():
+    results = Song.query.all()
+    # print('genre' in request.args.keys())
+    if 'search' in request.args.keys():
+        search_query = request.args.get("search", "")
+        results = Song.query.filter(Song.song_name.ilike(f"%{search_query}%")).all()
+
+    elif 'genre' in request.args.keys():
+        genre_id = request.args.get("genre", "")
+        results = Song.query.filter_by(genre_id=genre_id).all()
+        
+    user = User.query.get(session["user_id"])
+    genres = Genre.query.all()
+
+    return render_template(
+        "search.html",
+        results=results,
+        user=user,
+        current_track=current_track,
+        genres=genres,
+    )
+
+
+@app.route("/search", methods=["POST"])
+@auth_required
+def search_genre():
+    print("hoooooooooo")
+    return redirect(url_for("search"))

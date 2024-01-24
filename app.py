@@ -8,4 +8,5 @@ import models
 
 import player_routes
 import routes
+import playlist_routes
 import creator_routes

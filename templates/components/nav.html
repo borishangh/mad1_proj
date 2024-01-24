@@ -4,6 +4,9 @@
     </div>
 
     {% if user %}
+    <a href="/search" id="search-link">Explore <span class="material-symbols-outlined">
+            north_east
+        </span></a>
     <div class="profile-dropdown"><img src="{{user.pfp_url}}" width="55px"><span>@{{user.username}}</span>
 
         <div class="profile-dropdown-content">

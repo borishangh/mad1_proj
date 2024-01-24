@@ -1,59 +1,127 @@
 <style>
-    .sidebar {
-        position: fixed;
-        top: var(--nav-height);
-        left: 0;
-        height: 100%;
-        overflow: auto;
-        width: var(--sidebar-width);
-        background: #eee;
-        border-right: 1px solid #111;
-        padding: 20px 20px 150px 20px;
-    }
+  .sidebar section {
+    border-bottom: 1px solid #111;
+  }
 
-    .sidebar h2 {
-        font-size: 40px;
-    }
+  .sidebar-heading {
+    position: relative;
+    font-size: 24px;
+    font-weight: 500;
+    padding: 10px 16px;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
 
-    .sidebar .user {
-        font-weight: 400;
-    }
+  .sidebar-heading:hover {
+    font-style: italic;
+  }
 
-    .sidebar-lyrics {
-        font-size: 16px;
-        white-space: pre-wrap;
-    }
+  .sidebar-heading::after {
+    content: '\e5ce';
+    font: normal 300 40px "Material Symbols Outlined";
+    position: absolute;
+    top: 0;
+    right: 10px;
+  }
 
-    .byline {
-        background: #fff;
-    }
+  .sidebar-heading.collapsed::after {
+    content: '\e5cf';
+  }
+
+  .sidebar-content {
+    padding: 10px 20px 50px 20px;
+  }
+
+  .playlist-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
 </style>
 
-{% if current_track %}
-
-
 <div class="sidebar">
-    {% if current_track.song %}
+  {% if current_track and current_track.song %}
+  <section id="now-playing">
+    <button id="now-playing-heading" class="sidebar-heading" type="button" data-bs-toggle="collapse"
+      data-bs-target="#now-playing-content" aria-expanded="true" aria-controls="now-playing-content">
+      Now Playing
+    </button>
 
+    <div id="now-playing-content" class="sidebar-content collapse show" aria-labelledby="now-playing-heading">
 
-
-    <img src="{{current_track.album.album_cover_url if current_track.album else 'static/default_album.jpg'}}"
+      <img src="{{current_track.album.album_cover_url if current_track.album else 'static/default_album.jpg'}}"
         class="sidebar-album-img">
 
-    <h2>{{current_track.song.song_name}}
+      <h2>{{current_track.song.song_name}}
         <span class="text-muted user">//
-            <img src="{{current_track.artist.pfp_url}}" height=40px>
-            @{{current_track.artist.username}}</span>
-    </h2>
+          <img src="{{current_track.artist.pfp_url}}" height=40px>
+          @{{current_track.artist.username}}</span>
+      </h2>
 
-    <div class="byline my-4">played {{current_track.song.plays}} times since {{current_track.song.created_at}}</div>
+      <div class="byline my-4">played {{current_track.song.plays}} times since
+        {{current_track.song.created_at}}
+      </div>
 
-    <div class="sidebar-lyrics">{{current_track.song.lyrics}}</div>
+      <div class="sidebar-lyrics">{{current_track.song.lyrics}}</div>
+    </div>
+  </section>
+  {% endif %}
+  <section id="playlists">
+    <button id="playlists-heading" class="sidebar-heading" type="button" data-bs-toggle="collapse"
+      data-bs-target="#playlists-content" aria-expanded="true" aria-controls="playlists-content">
+      My playlists
+    </button>
 
+    <div id="playlists-content" class="sidebar-content collapse show" aria-labelledby="playlists-heading">
 
+      <button type="button" class="btn-box" data-bs-toggle="modal" data-bs-target="#create-playlist">
+        Create Playlist
+      </button>
 
-    {% else %}
-    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Velit, distinctio!
-    {% endif %}
+      <!-- Modal -->
+      <div class="modal fade" id="create-playlist" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="create-playlist-title">Playlist Details</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+              <form action="/create-playlist" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="playlist">
+                <label for="playlist-name">Playlist name :
+                  <input type="text" name="playlist-name" id="playlist-name" />
+                </label>
+                <label for="playlist-cover">Add Playlist Cover :
+                  <span class="text-muted">(optional)</span><input type="file" name="playlist-cover"
+                    class="form-control" id="playlist-cover" accept=".jpg" />
+                </label>
+                <hr>
+                <button type="button" class="btn-box" data-bs-dismiss="modal">Close</button>
+                <input type="submit" name="action" value="Create New Playlist" data-bs-dismiss="modal">
+              </form>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="playlist-container">
+        {% if user %}
+        {% for playlist in user.playlists %}
+        <div class="card-box m-1">
+          <img src="{{playlist.cover_url}}" width="100px">
+          <div class="card-text" style="width: 80px;">
+            <a href="/playlist/{{playlist.id}}">{{playlist.name}}</a>
+          </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+      </div>
+    </div>
 </div>
-{% endif %}
+</section>
+</div>

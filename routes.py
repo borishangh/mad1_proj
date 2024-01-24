@@ -27,6 +27,9 @@ def save_img(image, image_path, size=(256, 256)):
         img.convert("RGB").save(image_path, "JPEG")
 
 
+from sqlalchemy import func
+
+
 @app.route("/")
 @auth_required
 def index():
@@ -34,20 +37,20 @@ def index():
     if user.is_admin:
         return redirect(url_for("admin"))
 
-    top_songs = Song.query.order_by(Song.plays.desc()).limit(10).all()
+    top_songs = Song.query.order_by(Song.plays.desc()).limit(12).all()
     top_albums = (
-        db.session.query(Album, db.func.sum(Song.plays).label("total_plays"))
-        .join(Song, Album.songs)
+        db.session.query(Album, func.sum(Song.plays).label("total_plays"))
+        .join(Song, Album.id == Song.album_id, isouter=True)
         .group_by(Album)
-        .order_by(db.desc("total_plays"))
-        .limit(10)
+        .order_by(func.sum(Song.plays).desc())
+        .limit(12)
         .all()
     )
+
     featured = {"songs": top_songs, "albums": top_albums}
     return render_template(
         "index.html", user=user, current_track=current_track, featured=featured
     )
-
 
 @app.route("/admin")
 @auth_required

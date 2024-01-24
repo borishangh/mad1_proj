@@ -1,35 +1,49 @@
 {% extends '/components/base.html' %}
 
 {% block title %}
-home | st3am
-{% endblock %}
-
-{% block style %}
-<style>
-    .featured-song-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
-</style>
+home | STR3AM
 {% endblock %}
 
 {% block content %}
 
-<div class="featured-songs">
+<section>
     <h2>Featured Songs</h2>
-    <div class="featured-song-container">
+    {% if featured.songs %}
+    <div class="d-flex d-row flex-wrap">
         {% for song in featured.songs %}
         <div class="card-box mx-2 my-2">
             <img src="{{song.album.album_cover_url if song.album else 'static/default_album.jpg'}}" width="200px">
-            
+            <a href="" class="playlist-link">&#xFF0B;</a>
             <a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
             <div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
                 ""}}</div>
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <p>No songs added yet :/</p>
+    {% endif %}
+</section>
 
-</div>
+<hr>
+
+<section>
+    <h2>Featured Albums</h2>
+    {% if featured.albums %}
+    <div class="d-flex d-row">
+        {% for album, total_plays in featured.albums %}
+        <div class="card-box mx-2 my-2">
+            <img src="{{album.album_cover_url if album else 'static/default_album.jpg'}}" width="200px">
+
+            <div class="track-title">{{album.album_name}}</div>
+            <div><span class="text-muted">@{{album.user.username}}</span></div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No albums added yet :/</p>
+    {% endif %}
+</section>
 
 
 {% endblock %}

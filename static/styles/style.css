@@ -8,14 +8,24 @@
 :root {
     --nav-height: 55px;
     --player-height: 70px;
-    --sidebar-width: 400px;
+    --sidebar-width: 500px;
 }
 
+body {
+    background: rgb(255, 230, 234);
+    height: 100%;
+}
+
+
 main {
-    /* max-width: 800px; */
-    width: fit-content;
+    margin: var(--nav-height) 0 var(--player-height) 0;
+}
+
+.content {
+    overflow: auto;
     padding: 10px 20px;
-    margin: var(--nav-height) 0 var(--player-height) var(--sidebar-width);
+    height: calc(100vh - var(--nav-height) - var(--player-height));
+    width: 100%;
 }
 
 a {
@@ -57,7 +67,6 @@ a:active {
 form {
     background-color: #fff5;
     padding: 15px 15px 30px 15px;
-    max-width: 500px;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -71,6 +80,7 @@ form input {
 }
 
 .card-box {
+    position: relative;
     display: flex;
     width: min-content;
     height: fit-content;
@@ -79,6 +89,30 @@ form input {
     padding: 5px;
     background: white;
     border: 1px solid #111;
+}
+
+
+.playlist-link {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 5px;
+    right: 5px;
+    display: block;
+    background: #111;
+    color: white;
+    font-size: 24px;
+    padding: 0 6px;
+    font-weight: 900;
+}
+
+a.playlist-link:hover {
+    background: white;
+    color: #111;
+    outline: 1px solid #111;
+    border: none;
+    font-style: normal
 }
 
 .card-title {
@@ -111,4 +145,36 @@ form input {
     font-weight: 600;
     font-size: larger;
     margin-bottom: 2px;
+}
+
+.sidebar {
+    overflow: auto;
+    height: calc(100vh - var(--nav-height) - var(--player-height));
+    width: var(--sidebar-width);
+    background: #eee;
+    border-right: 1px solid #111;
+    padding-bottom: 30px;
+}
+
+.sidebar h2 {
+    font-size: 40px;
+}
+
+.sidebar .user {
+    font-weight: 400;
+}
+
+.sidebar-lyrics {
+    font-size: 16px;
+    white-space: pre-wrap;
+}
+
+.byline {
+    background: #fff;
+}
+
+.card-text {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }

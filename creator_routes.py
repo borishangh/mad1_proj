@@ -3,7 +3,7 @@ import uuid
 from functools import wraps
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 
-from models import db, User, Song, Album, Rating
+from models import db, User, Song, Album, Rating, Genre
 from app import app
 from routes import auth_required, save_img, current_track
 
@@ -12,7 +12,10 @@ from routes import auth_required, save_img, current_track
 @auth_required
 def creator():
     user = user = User.query.get(session["user_id"])
-    return render_template("creator.html", user=user,  current_track=current_track)
+    genres = Genre.query.all()
+    return render_template(
+        "creator.html", user=user, current_track=current_track, genres=genres
+    )
 
 
 @app.route("/creator", methods=["POST"])
@@ -24,6 +27,7 @@ def creator_post():
         songname = request.form.get("songname")
         lyrics = request.form.get("lyrics")
         songfile = request.files["songfile"]
+        genre_id = request.form.get("genre")
 
         if not songname:
             flash("Song name cannot be empty.", "danger")
@@ -41,7 +45,11 @@ def creator_post():
         songfile.save(song_url)
 
         song = Song(
-            song_name=songname, song_url=song_url, creator_id=user.id, lyrics=lyrics
+            song_name=songname,
+            song_url=song_url,
+            creator_id=user.id,
+            lyrics=lyrics,
+            genre_id=genre_id,
         )
 
         db.session.add(song)
