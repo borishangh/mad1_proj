@@ -22,6 +22,8 @@ class User(db.Model):
     albums = db.relationship("Album", backref="user", lazy=True)
     playlists = db.relationship("Playlist", backref="user", lazy=True)
 
+    is_blacklisted = db.Column(db.Boolean, nullable=False, default=False)
+
     @property
     def password(self):
         raise AttributeError("password is not a readable attribute")
@@ -51,6 +53,8 @@ class Album(db.Model):
     # Relationship with songs
     songs = db.relationship("Song", backref="album", lazy=True)
 
+    is_flagged = db.Column(db.Boolean, nullable=False, default=False)
+
 
 class Song(db.Model):
     __tablename__ = "songs"
@@ -68,6 +72,7 @@ class Song(db.Model):
     plays = db.Column(db.Integer, default=0)
 
     ratings = db.relationship("Rating", backref="song", lazy=True)
+    is_flagged = db.Column(db.Boolean, nullable=False, default=False)
 
 
 class Rating(db.Model):
@@ -75,12 +80,9 @@ class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
 
     song_id = db.Column(db.Integer, db.ForeignKey("songs.id"), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
 
-    five_star = db.Column(db.Integer, default=0)
-    four_star = db.Column(db.Integer, default=0)
-    three_star = db.Column(db.Integer, default=0)
-    two_star = db.Column(db.Integer, default=0)
-    one_star = db.Column(db.Integer, default=0)
+    value = db.Column(db.Integer, default=0)
 
 
 playlist_songs = db.Table(

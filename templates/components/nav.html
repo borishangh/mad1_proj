@@ -17,7 +17,11 @@
         <div class="profile-dropdown-content">
             {% if not user.is_admin %}
             <a href="/profile">profile</a>
+
+            {% if not user.is_blacklisted %}
             <a href="/creator">creator's profile</a>
+            {% endif %}
+            
             {% endif %}
 
             <a href="/logout">log out</a>

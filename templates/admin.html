@@ -32,6 +32,10 @@ Admin | STR3AM
 
     <h2>Users</h2>
     <div class="users-list p-2 d-flex flex-wrap gap-3">
+        {% if users | length ==1 %}
+        <p>No users registered.</p>
+        {% endif %}
+
         {% for user in users if not user.is_admin %}
         <div class="block mb-3">
             <div class="p-1">
@@ -40,9 +44,13 @@ Admin | STR3AM
             </div>
 
             <div class="p-1 block-links">
-                <a href="">Remove</a>
-                <a href="">Whitelist</a>
-                <a href="">Delete</a>
+                {% if user.is_blacklisted %}
+                <a href="{{ url_for('whitelist_user', user_id=user.id) }}">Whitelist</a>
+                {% else %}
+                <a href="{{ url_for('blacklist_user', user_id=user.id) }}">Blacklist</a>
+                {% endif %}
+
+                <a href="{{ url_for('remove_user', user_id=user.id) }}">Remove</a>
             </div>
         </div>
         {% endfor %}
@@ -51,6 +59,10 @@ Admin | STR3AM
 <hr>
 <section>
     <h2>Songs</h2>
+    {% if not songs %}
+    <p>No songs available.</p>
+    {% endif %}
+
     <div class="songs-list p-2 d-flex flex-wrap gap-3">
         {% for song in songs%}
         <div class="block mb-3">
@@ -61,8 +73,8 @@ Admin | STR3AM
             </div>
 
             <div class="p-1 block-links">
-                <a href="">Flag</a>
-                <a href="">Delete</a>
+                <a href="{{ url_for('flag_song', song_id=song.id) }}">{{'Unflag' if song.is_flagged else 'Flag'}}</a>
+                <a href="{{ url_for('delete_song', song_id=song.id) }}">Delete</a>
             </div>
         </div>
         {% endfor %}
@@ -71,6 +83,9 @@ Admin | STR3AM
 <hr>
 <section>
     <h2>Albums</h2>
+    {% if not albums %}
+    <p>No albums available.</p>
+    {% endif %}
     <div class="albums-list p-2 d-flex flex-wrap gap-3">
         {% for album in albums%}
         <div class="block mb-3">
@@ -80,8 +95,10 @@ Admin | STR3AM
             </div>
 
             <div class="p-1 block-links">
-                <a href="">Flag</a>
-                <a href="">Delete</a>
+                <a href="{{ url_for('flag_album', album_id=album.id) }}">{{'Unflag' if album.is_flagged else 'Flag'}}
+
+                </a>
+                <a href="{{ url_for('delete_album', album_id=album.id) }}">Delete</a>
             </div>
         </div>
         {% endfor %}

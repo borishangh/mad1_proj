@@ -171,7 +171,7 @@
 
         <p class="song-artist">@{{current_track.artist.username}} //</p>
 
-        <form class="rate" id="rating-form">
+        <form class="rate" id="rating-form" action="{{ url_for('submit_rating') }}" method="post">
             <input type="hidden" name="song-id" value='{{current_track.song.id}}'>
 
             <input type="radio" id="star5" name="rate" value="5" />
@@ -188,12 +188,22 @@
 
         <script>
             const radioButtons = document.querySelectorAll('.rate input[type="radio"]');
-            radioButtons.forEach(function(radioButton) {
-                radioButton.addEventListener("click", function() {
-                    document.getElementById("rating-form").submit();
+            radioButtons.forEach(function (radioButton) {
+                radioButton.addEventListener("click", function () {
+                    const formData = new FormData(document.getElementById("rating-form"));
+
+                    fetch("{{ url_for('submit_rating') }}", {
+                        method: "POST",
+                        body: formData,
+                    });
                 });
             });
         </script>
+
+        {% endif %}
+
+        {% if current_track.song.is_flagged %}
+        <span style="color:red">This song is flagged by the admin</span>
 
         {% endif %}
 

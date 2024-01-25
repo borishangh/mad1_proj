@@ -12,11 +12,18 @@ import os
 from models import db, User, Song, Album, Rating
 from app import app
 from sqlalchemy.orm import make_transient
+from sqlalchemy import func
 from threading import Thread
 import pygame
 
 pygame.mixer.init()
-current_track = {"song": None, "artist": None, "album": None, "length": None}
+current_track = {
+    "song": None,
+    "artist": None,
+    "album": None,
+    "length": None,
+    "rating": None,
+}
 
 
 def play_music(song_id, length):
@@ -38,6 +45,13 @@ def play_music(song_id, length):
         Song.query.get(song_id).plays += 1
         db.session.commit()
 
+        average_rating = (
+            db.session.query(func.avg(Rating.value))
+            .filter(Rating.song_id == song.id)
+            .scalar()
+        )
+        current_track["rating"] = int(average_rating) if average_rating else 0
+
         pygame.mixer.music.load(song_url)
         pygame.mixer.music.play()
 
@@ -49,12 +63,14 @@ def pause_music():
 
 
 def stop_music():
-    print("stoooooooop")
     pygame.mixer.music.stop()
-    current_track["song"] = None
-    current_track["artist"] = None
-    current_track["album"] = None
-    current_track["length"] = None
+    current_track = {
+        "song": None,
+        "artist": None,
+        "album": None,
+        "length": None,
+        "rating": None,
+    }
 
 
 @app.route("/get_seconds_played")

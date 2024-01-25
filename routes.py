@@ -1,7 +1,16 @@
 import os, uuid
 from PIL import Image
 from functools import wraps
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    flash,
+    session,
+    jsonify,
+)
 
 from player_routes import current_track, stop_music
 from models import db, User, Song, Album, Rating
@@ -51,6 +60,7 @@ def index():
     return render_template(
         "index.html", user=user, current_track=current_track, featured=featured
     )
+
 
 @app.route("/login")
 def login():
@@ -167,3 +177,22 @@ def profile_post():
     db.session.commit()
     flash("Profile updated successfully", "success")
     return redirect(url_for("index"))
+
+
+@app.route("/submit_rating", methods=["POST"])
+def submit_rating():
+    song_id = request.form.get("song-id")
+    rating_value = request.form.get("rate")
+
+    user = User.query.get(session["user_id"])
+    existing_rating = Rating.query.filter_by(song_id=song_id, user_id=user.id).first()
+
+    if existing_rating:
+        existing_rating.value = rating_value
+    else:
+        new_rating = Rating(song_id=song_id, user_id=user.id, value=rating_value)
+        db.session.add(new_rating)
+
+    db.session.commit()
+
+    return jsonify({"success": True})

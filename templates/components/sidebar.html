@@ -56,11 +56,18 @@
       <h2>{{current_track.song.song_name}}
         <span class="text-muted user">//
           <img src="{{url_for('static', filename=current_track.artist.pfp_url)}}" height=40px>
-          @{{current_track.artist.username}}</span>
+          @{{current_track.artist.username}}
+        </span>
       </h2>
 
-      <div class="byline my-4">played {{current_track.song.plays}} times since
-        {{current_track.song.created_at}}
+      <div class="byline my-4 p-2" style="width: fit-content;">played {{current_track.song.plays}} times since
+        {{current_track.song.created_at}} <br> with a
+        <span style="color:goldenrod">{{current_track.rating}}<span style="font-size:24px">&#9733;</span>'s
+          rating</span>
+
+        {% if current_track.song.album and current_track.song.album.is_flagged %}
+            <span style="color: red;">This album is flagged by the admin</span>
+        {% endif %}
       </div>
 
       <div class="sidebar-lyrics">{{current_track.song.lyrics}}</div>
@@ -150,6 +157,7 @@
     }
   </style>
 
+  {% if genre_info.values() | sum > 0 %}
   <section class="genre-stats p-4 ">
     {% for genre, song_count in genre_info.items() %}
     <div class="d-flex flex-row ">
@@ -157,9 +165,11 @@
         {{
         (song_count /
         genre_info.values() | sum * 100) | int
-        }}%  // {{ genre }}</h3>
+        }}% // {{ genre }}</h3>
     </div>
     {% endfor %}
   </section>
+  {% endif %}
+
   {% endif %}
 </div>
