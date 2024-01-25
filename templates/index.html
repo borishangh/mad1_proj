@@ -13,12 +13,12 @@ home | STR3AM
         {% for song in featured.songs %}
         <div class="card-box mx-2 my-2">
 
-            <a class="playlist-link" data-bs-toggle="modal" data-bs-target="#add-playlist">
+            <a class="playlist-link" data-bs-toggle="modal" data-bs-target="#add-playlist-{{song.id}}">
                 &#xFF0B;
             </a>
 
             <!-- Modal -->
-            <div class="modal fade" id="add-playlist" tabindex="-1" aria-hidden="true">
+            <div class="modal fade" id="add-playlist-{{song.id}}" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -34,6 +34,10 @@ home | STR3AM
                                     {{ playlist.name }}
                                 </button>
                                 {% endfor %}
+
+                                {% if not user.playlists %}
+                                Create a playlist to add this song.
+                                {% endif %}
                             </form>
                         </div>
                     </div>

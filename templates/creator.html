@@ -34,6 +34,9 @@ creator | STR3M
   </div>
 </section>
 
+<hr>
+
+<!-- Tracks -->
 <section class="my-4 mx-4">
   <h2>Your Tracks</h2>
 
@@ -99,14 +102,55 @@ creator | STR3M
           {{song.song_name}}</a>
 
         <div class="track-subtitle">
-          <a href="#" data-bs-toggle="modal" data-bs-target="#edit-song-details">Edit</a> |
-          <a href="">Delete</a>
+          <a data-bs-toggle="modal" data-bs-target="#edit-song-{{song.id}}">Edit</a> |
+          <a href="{{ url_for('delete_song', song_id=song.id) }}">Delete</a>
+
+          <div class="modal fade" id="edit-song-{{song.id}}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="song-details-title">Edit Song Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                  <form method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="edit-song">
+                    <input type="hidden" name="song-id" value="{{song.id}}">
+                    <label for="songname">Song name :
+                      <input type="text" name="songname" id="songname" value="{{song.song_name}}" />
+                    </label>
+                    <label for="lyrics">Lyrics :
+                      <textarea name="lyrics" class="form-control" id="lyrics" rows="8">{{song.lyrics}}</textarea>
+                    </label>
+
+                    <label for="genre">Select Genre :
+                      <select class="form-select" name="genre" id="genre">
+                        {% for genre in genres%}
+                        {% if song.genre_id == genre.id %}
+                        <option value="{{genre.id}}" selected>{{genre.name}}</option>
+                        {% else %}
+                        <option value="{{genre.id}}">{{genre.name}}</option>
+                        {% endif %}
+                        {% endfor %}
+                      </select>
+                    </label>
+                    <hr>
+                    <button type="button" class="btn-box" data-bs-dismiss="modal">Close</button>
+                    <input type="submit" name="action" value="Save Edits" data-bs-dismiss="modal">
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </span>
     </div>
     {% endfor %}
 
 </section>
+
+<hr>
 
 <section class="my-4 mx-4">
   <h2>Your Albums</h2>
@@ -125,10 +169,9 @@ creator | STR3M
           </div>
 
           <div class="modal-body">
-
             <form method="post" enctype="multipart/form-data">
-              <label for="albumname">Album name :
-                <input type="text" name="albumname" id="albumname" />
+              <label for="album_name">Album name :
+                <input type="text" name="album_name" id="album_name" />
               </label>
 
               <label for="cover">Add Album Cover :
@@ -162,7 +205,53 @@ creator | STR3M
       <img src="{{url_for('static', filename=album.album_cover_url)}}" width="150px">
       <div class="track-title">{{album.album_name}}</div>
       <div class="track-subtitle">
-        <a href="">Edit</a> | <a href="">Delete</a>
+
+        <a data-bs-toggle="modal" data-bs-target="#edit-album-{{album.id}}">Edit</a> |
+        <a href="{{ url_for('delete_album', album_id=album.id) }}">Delete</a>
+
+        <div class="modal fade" id="edit-album-{{album.id}}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="album-details-title">Edit Album Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+
+              <div class="modal-body">
+
+                <form method="post" enctype="multipart/form-data">
+                  <input type="hidden" name="album-id" value="{{album.id}}">
+
+                  <label for="album_name">Edit album name :
+                    <input type="text" name="album_name" id="album_name" value="{{album.album_name}}" />
+                  </label>
+
+                  <label for="cover">Edit Album Cover :
+                    <input type="file" name="cover" class="form-control" id="cover" accept=".jpg, .jpeg" />
+                  </label>
+
+                  Select Tracks :
+                  <div class="track-list d-flex flex-row flex-wrap">
+                    {% for song in user.songs if not song.album_id or song.album_id == album.id %}
+
+                    {% if song in album.songs %}
+                    <input type="checkbox" class="btn-check" name="song-{{song.id}}" id="{{song.id}}" autocomplete="off"
+                      checked>
+                    {% else %}
+                    <input type="checkbox" class="btn-check" name="song-{{song.id}}" id="{{song.id}}"
+                      autocomplete="off">
+                    {% endif %}
+                    <label class="btn btn-box btn-outline-secondary m-1" for="{{song.id}}">{{song.song_name}}</label>
+                    {% endfor %}
+                  </div>
+
+                  <button type="button" class="btn-box" data-bs-dismiss="modal">Close</button>
+                  <input type="submit" name="edit-album" value="Save Changes" class="btn-success" data-bs-dismiss="modal">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     {% endfor %}

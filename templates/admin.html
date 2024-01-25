@@ -5,6 +5,87 @@ Admin | STR3AM
 {% endblock %}
 
 {% block content %}
-<h1>Admin Dashboard</h1>
-<p>{{user.username}}</p>
+<h1 class="my-3">Admin Dashboard</h1>
+<section>
+    <style>
+        .users-list,
+        .songs-list,
+        .albums-list {
+            width: fit-content;
+        }
+
+        .block {
+            font-size: 20px;
+            background: #eee;
+            border: 1px solid black;
+            width: fit-content;
+        }
+
+        .block-links {
+            border-top: 1px solid #111;
+        }
+
+        .block a {
+            border: none;
+        }
+    </style>
+
+    <h2>Users</h2>
+    <div class="users-list p-2 d-flex flex-wrap gap-3">
+        {% for user in users if not user.is_admin %}
+        <div class="block mb-3">
+            <div class="p-1">
+                <img src="{{url_for('static', filename=user.pfp_url)}}" width=50px>
+                @{{user.username}}<span class="text-muted"> : {{user.email}} </span>
+            </div>
+
+            <div class="p-1 block-links">
+                <a href="">Remove</a>
+                <a href="">Whitelist</a>
+                <a href="">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<hr>
+<section>
+    <h2>Songs</h2>
+    <div class="songs-list p-2 d-flex flex-wrap gap-3">
+        {% for song in songs%}
+        <div class="block mb-3">
+            <div class="p-1">
+                <img src="{{url_for('static', filename=song.album.album_cover_url if song.album else 'default_album.jpg')}}"
+                    width=50px>
+                {{song.song_name}}<span class="text-muted"> : @{{song.user.username}} </span>
+            </div>
+
+            <div class="p-1 block-links">
+                <a href="">Flag</a>
+                <a href="">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+<hr>
+<section>
+    <h2>Albums</h2>
+    <div class="albums-list p-2 d-flex flex-wrap gap-3">
+        {% for album in albums%}
+        <div class="block mb-3">
+            <div class="p-1">
+                <img src="{{url_for('static', filename=album.album_cover_url)}}" width=50px>
+                {{album.album_name}}<span class="text-muted"> : @{{album.user.username}} </span>
+            </div>
+
+            <div class="p-1 block-links">
+                <a href="">Flag</a>
+                <a href="">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

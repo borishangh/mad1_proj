@@ -35,7 +35,7 @@ def play_music(song_id, length):
             make_transient(album)
             current_track["album"] = album
 
-        song.plays += 1
+        Song.query.get(song_id).plays += 1
         db.session.commit()
 
         pygame.mixer.music.load(song_url)

@@ -67,6 +67,8 @@ def add_to_playlist():
         song = Song.query.get(song_id)
         playlist = Playlist.query.get(playlist_id)
 
+        print(song, playlist, "---------------------")
+
         if not playlist.songs or song not in playlist.songs:
             playlist.songs.append(song)
         db.session.commit()

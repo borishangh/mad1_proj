@@ -33,16 +33,54 @@ Search | STR3AM
 
 <hr>
 
-<section class="d-flex flex-row flex-wrap">
-	{% for song in results %}
-	<div class="card-box mx-2 my-2">
-		<img src="{{song.album.album_cover_url if song.album else 'static/default_album.jpg'}}" width="200px">
+<section>
+	<h2 class="mb-3">Songs</h2>
+	<div class="song-container d-flex flex-row flex-wrap">
+		{% if not results %}
+		<p>No songs found :(</p>
+		{% endif %}
+		{% for song in results %}
+		<div class="card-box mx-2 my-2">
 
-		<a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
-		<div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
-			""}}</div>
+			<a class="playlist-link" data-bs-toggle="modal" data-bs-target="#add-playlist-{{song.id}}">
+				&#xFF0B;
+			</a>
+
+			<!-- Modal -->
+			<div class="modal fade" id="add-playlist-{{song.id}}" tabindex="-1" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="add-playlist-title">Add to Playlist</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+
+						<div class="modal-body">
+							<form action="/add_to_playlist" method="post">
+								{% for playlist in user.playlists %}
+								<button class="btn-box" type="submit" data-bs-dismiss="modal" name="selected"
+									value="{{ song.id }} {{ playlist.id }}">
+									{{ playlist.name }}
+								</button>
+								{% endfor %}
+								{% if not user.playlists %}
+								Create a playlist to add this song.
+								{% endif %}
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<img src="{{url_for('static', filename=song.album.album_cover_url if song.album else 'default_album.jpg')}}"
+				width="200px">
+
+			<a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
+			<div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
+				""}}</div>
+		</div>
+		{% endfor %}
 	</div>
-	{% endfor %}
 </section>
 
 {% endblock %}

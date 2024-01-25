@@ -18,15 +18,17 @@ home | STR3AM
             <h2 class="">{{playlist.name}} <br> <span class="text-muted">@{{user.username}}</span></h2>
         </div>
     </div>
-
-    {% for song in songs %}
-    <div class="card-box">
-        <img src="{{url_for('static', filename=song.album.album_cover_url)}}" alt="">
-        <a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
-        <div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
-            ""}}</div>
+    <div class="playlist-songs d-flex d-row gap-4">
+        {% for song in songs %}
+        <div class="card-box mb-4">
+            <img src="{{url_for('static', filename=song.album.album_cover_url if song.album else 'default_album.jpg')}}"
+                alt="">
+            <a href="{{ url_for('play', song_id=song.id, action='play') }}" class="track-title">{{song.song_name}}</a>
+            <div><span class="text-muted">@{{song.user.username}}</span> // {{song.album.album_name if song.album else
+                ""}}</div>
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
 </section>
 
 {% endblock %}

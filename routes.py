@@ -52,14 +52,6 @@ def index():
         "index.html", user=user, current_track=current_track, featured=featured
     )
 
-
-@app.route("/admin")
-@auth_required
-def admin():
-    user = User.query.get(session["user_id"])
-    return render_template("admin.html", user=user)
-
-
 @app.route("/login")
 def login():
     return render_template("login.html")

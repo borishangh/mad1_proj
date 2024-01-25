@@ -4,9 +4,13 @@
     </div>
 
     {% if user %}
+
+    {% if not user.is_admin %}
     <a href="/search" id="search-link">Explore <span class="material-symbols-outlined">
             north_east
         </span></a>
+    {% endif %}
+
     <div class="profile-dropdown"><img src="{{url_for('static', filename=user.pfp_url)}}"
             width="55px"><span>@{{user.username}}</span>
 
@@ -26,3 +30,4 @@
         </div>
         {% endif %}
     </div>
+</div>

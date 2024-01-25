@@ -106,6 +106,7 @@
     }
 
     .rate {
+        display: block !important;
         float: left;
         padding: 0;
         margin: 0;
@@ -154,9 +155,9 @@
     }
 </style>
 
-{% if current_track %}
 
 <div id="music-player">
+    {% if current_track %}
     <div class="panel">
         <form action="{{ url_for('play') }}" method="post">
             <input type="hidden" name="current" value="{{ current_track }}">
@@ -169,7 +170,10 @@
         {% if current_track.song %}
 
         <p class="song-artist">@{{current_track.artist.username}} //</p>
-        <div class="rate">
+
+        <form class="rate" id="rating-form">
+            <input type="hidden" name="song-id" value='{{current_track.song.id}}'>
+
             <input type="radio" id="star5" name="rate" value="5" />
             <label for="star5" title="text">&zwnj;</label>
             <input type="radio" id="star4" name="rate" value="4" />
@@ -180,7 +184,16 @@
             <label for="star2" title="text">&zwnj;</label>
             <input type="radio" id="star1" name="rate" value="1" />
             <label for="star1" title="text">&zwnj;</label>
-        </div>
+        </form>
+
+        <script>
+            const radioButtons = document.querySelectorAll('.rate input[type="radio"]');
+            radioButtons.forEach(function(radioButton) {
+                radioButton.addEventListener("click", function() {
+                    document.getElementById("rating-form").submit();
+                });
+            });
+        </script>
 
         {% endif %}
 
@@ -209,6 +222,6 @@
             }, 500);
         </script>
     </div>
+    {% endif %}
 
 </div>
-{% endif %}

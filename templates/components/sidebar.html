@@ -67,7 +67,7 @@
     </div>
   </section>
   {% endif %}
-  {% if user %}
+  {% if user and not user.is_admin %}
   <section id="playlists">
     <button id="playlists-heading" class="sidebar-heading" type="button" data-bs-toggle="collapse"
       data-bs-target="#playlists-content" aria-expanded="true" aria-controls="playlists-content">
@@ -124,6 +124,42 @@
         {% endif %}
       </div>
     </div>
+  </section>
+  {% endif %}
+
+
+
+  {% if user and user.is_admin %}
+  <section class="admin-stats p-5 ">
+    <h2>
+      {{stats.total_users}} listeners <br>
+      {{stats.total_songs}} tracks <br>
+      {{stats.total_plays}} plays
+    </h2>
+  </section>
+
+  <style>
+    .genre-stats {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bar {
+      display: inline-block;
+      background: #111;
+    }
+  </style>
+
+  <section class="genre-stats p-4 ">
+    {% for genre, song_count in genre_info.items() %}
+    <div class="d-flex flex-row ">
+      <h3><span class="bar" style="width: {{ 200*(song_count / genre_info.values() | sum) | round(1) }}px">&zwnj;</span>
+        {{
+        (song_count /
+        genre_info.values() | sum * 100) | int
+        }}%  // {{ genre }}</h3>
+    </div>
+    {% endfor %}
   </section>
   {% endif %}
 </div>

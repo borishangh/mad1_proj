@@ -7,6 +7,7 @@ import config
 import models
 
 import player_routes
+import admin_routes
 import routes
 import playlist_routes
 import creator_routes
