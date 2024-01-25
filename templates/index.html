@@ -67,7 +67,7 @@ home | STR3AM
         <div class="card-box mx-2 my-2">
             <img src="{{url_for('static', filename=album.album_cover_url)}}" width="200px">
 
-            <div class="track-title">{{album.album_name}}</div>
+            <a href="/album/{{album.id}}" class="track-title">{{album.album_name}}</a>
             <div><span class="text-muted">@{{album.user.username}}</span></div>
         </div>
         {% endfor %}

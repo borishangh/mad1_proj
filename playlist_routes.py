@@ -24,6 +24,21 @@ def playlist_detail(playlist_id):
         current_track=current_track,
     )
 
+@app.route("/album/<int:album_id>")
+@auth_required
+def album_detail(album_id):
+    user = User.query.get(session["user_id"])
+    album = Album.query.get_or_404(album_id)
+    songs = album.songs
+
+    return render_template(
+        "album.html",
+        album=album,
+        songs=songs,
+        user=user,
+        current_track=current_track,
+    )
+
 
 @app.route("/create-playlist", methods=["POST"])
 @auth_required
@@ -66,8 +81,6 @@ def add_to_playlist():
     if song_id and playlist_id:
         song = Song.query.get(song_id)
         playlist = Playlist.query.get(playlist_id)
-
-        print(song, playlist, "---------------------")
 
         if not playlist.songs or song not in playlist.songs:
             playlist.songs.append(song)

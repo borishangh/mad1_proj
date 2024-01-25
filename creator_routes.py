@@ -147,6 +147,10 @@ def delete_song(song_id):
     song = Song.query.get(song_id)
     album = song.album
 
+    ratings = Rating.query.filter_by(song_id=song_id).all()
+    for rating in ratings:
+        db.session.delete(rating)
+
     if album:
         album.songs.remove(song)
         db.session.commit()
